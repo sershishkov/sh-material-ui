@@ -6,11 +6,22 @@ import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import MenuIcon from '@material-ui/icons/Menu';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import InboxIcon from '@material-ui/icons/Inbox';
+// import Collapse from '@material-ui/core/Collapse';
+// import ExpandLess from '@material-ui/icons/ExpandLess';
+// import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import logo from '../../assets/logo.svg';
 
@@ -68,6 +79,9 @@ const useStyles = makeStyles((theme) => ({
     height: '45px',
   },
   menu: {
+    '&::-webkit-scrollbar': {
+      width: 0,
+    },
     backgroundColor: theme.palette.common.blue,
     color: 'white',
     borderRadius: '0px',
@@ -79,15 +93,46 @@ const useStyles = makeStyles((theme) => ({
       opacity: 1,
     },
   },
+  drawerIconContainer: {
+    marginLeft: 'auto',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  drawerIcon: {
+    height: '50px',
+    width: '50px',
+  },
+  drawer: {
+    backgroundColor: theme.palette.common.blue,
+  },
+  drawerItem: {
+    ...theme.typography.tab,
+    color: 'white',
+    opacity: 0.7,
+  },
+  drawerItemEstimate: {
+    backgroundColor: theme.palette.common.orange,
+  },
+  drawerItemSelected: {
+    '$ .MuiListItemText-root': {
+      opacity: 1,
+    },
+  },
+  appbar: {
+    zIndex: theme.zIndex.modal + 1,
+  },
 }));
 
 const Header = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
   const matches = useMediaQuery(theme.breakpoints.down('md'));
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [value, setValue] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -97,93 +142,77 @@ const Header = () => {
   const handleClick = (event) => {
     // console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
-    setOpen(true);
+    setOpenMenu(true);
   };
 
   const handleMenuItemClick = (event, index) => {
     setAnchorEl(null);
-    setOpen(false);
+    setOpenMenu(false);
     setSelectedIndex(index);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    setOpen(false);
+    setOpenMenu(false);
   };
+
   const menuOptions = [
-    { name: 'Services', link: '/services' },
-    { name: 'Custom sofware development', link: '/customsofware' },
-    { name: 'Mob App Development', link: '/mobileapps' },
-    { name: 'WebSite Development', link: '/websites' },
+    { name: 'Services', link: '/services', activeIndex: 1, selectedIndex: 0 },
+    {
+      name: 'Custom sofware development',
+      link: '/customsofware',
+      activeIndex: 1,
+      selectedIndex: 1,
+    },
+    {
+      name: 'Mob App Development',
+      link: '/mobileapps',
+      activeIndex: 1,
+      selectedIndex: 2,
+    },
+    {
+      name: 'WebSite Development',
+      link: '/websites',
+      activeIndex: 1,
+      selectedIndex: 3,
+    },
   ];
 
+  const routes = [
+    { name: 'Home', link: '/', activeIndex: 0 },
+    {
+      name: 'Services',
+      link: '/services',
+      activeIndex: 1,
+      ariaOwns: anchorEl ? 'sh-menu-for-services' : undefined,
+      ariaPopup: anchorEl ? true : undefined,
+      mouseOver: (event) => handleClick(event),
+    },
+    { name: 'The revolution', link: '/revolution', activeIndex: 2 },
+    { name: 'About us', link: '/about', activeIndex: 3 },
+    { name: 'Contact us', link: '/contact', activeIndex: 4 },
+    // { name: 'Free Estimate', link: '/estimate' },
+  ];
+
+  // const routesList = useMemo(routes, [routes]);
+  // const menuOptionsList = useMemo(menuOptions, [menuOptions]);
+
   useEffect(() => {
-    // if (window.location.pathname === '/' && value !== 0) {
-    //   setValue(0);
-    // } else if (window.location.pathname === '/services' && value !== 1) {
-    //   setValue(1);
-    // } else if (window.location.pathname === '/revolution' && value !== 2) {
-    //   setValue(2);
-    // } else if (window.location.pathname === '/about' && value !== 3) {
-    //   setValue(3);
-    // } else if (window.location.pathname === '/contact' && value !== 4) {
-    //   setValue(4);
-    // }
-    //  else if (window.location.pathname === '/estimate' && value !== 5) {
-    //   setValue(5);
-    // }
-
-    switch (window.location.pathname) {
-      case '/':
-        if (value !== 0) {
-          setValue(0);
-        }
-        break;
-      case '/services':
-        if (value !== 1) {
-          setValue(1);
-          setSelectedIndex(0);
-        }
-        break;
-      case '/customsofware':
-        if (value !== 1) {
-          setValue(1);
-          setSelectedIndex(1);
-        }
-        break;
-      case '/mobileapps':
-        if (value !== 1) {
-          setValue(1);
-          setSelectedIndex(2);
-        }
-        break;
-      case '/websites':
-        if (value !== 1) {
-          setValue(1);
-          setSelectedIndex(3);
-        }
-        break;
-      case '/revolution':
-        if (value !== 2) {
-          setValue(2);
-        }
-        break;
-      case '/about':
-        if (value !== 3) {
-          setValue(3);
-        }
-        break;
-      case '/contact':
-        if (value !== 4) {
-          setValue(4);
-        }
-        break;
-      // case '/estimate': if(value !== 5) {setValue(5)};break;
-
-      default:
-        break;
-    }
-  }, [value]);
+    [...menuOptions, ...routes].forEach((route, index) => {
+      switch (window.location.pathname) {
+        case `${route.link}`:
+          if (value !== route.activeIndex) {
+            setValue(route.activeIndex);
+            if (route.selectedIndex && route.selectedIndex !== selectedIndex) {
+              setSelectedIndex(route.selectedIndex);
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    });
+  }, [value, selectedIndex]);
 
   const tabs = (
     <React.Fragment>
@@ -193,35 +222,18 @@ const Header = () => {
         className={classes.tabContainer}
         indicatorColor='primary'
       >
-        <Tab label='Home' className={classes.tab} component={Link} to='/' />
-        <Tab
-          aria-owns={anchorEl ? 'sh-menu-for-services' : undefined}
-          aria-haspopup={anchorEl ? true : undefined}
-          label='Services'
-          className={classes.tab}
-          component={Link}
-          to='/services'
-          // onClick={(event) => handleClick(event)}
-          onMouseOver={(event) => handleClick(event)}
-        />
-        <Tab
-          label='The revolution'
-          className={classes.tab}
-          component={Link}
-          to='/revolution'
-        />
-        <Tab
-          label='About us'
-          className={classes.tab}
-          component={Link}
-          to='/about'
-        />
-        <Tab
-          label='Contact us'
-          className={classes.tab}
-          component={Link}
-          to='/contact'
-        />
+        {routes.map((route, index) => (
+          <Tab
+            key={route.name}
+            className={classes.tab}
+            component={Link}
+            to={route.link}
+            label={route.name}
+            aria-owns={route.ariaOwns}
+            aria-haspopup={route.ariaPopup}
+            onMouseOver={route.mouseOver}
+          />
+        ))}
       </Tabs>
       <Button
         className={classes.button}
@@ -235,11 +247,13 @@ const Header = () => {
       <Menu
         id='sh-menu-for-services'
         anchorEl={anchorEl}
-        open={open}
+        open={openMenu}
         onClose={handleClose}
         MenuListProps={{ onMouseLeave: handleClose }}
         classes={{ paper: classes.menu }}
         elevation={0}
+        style={{ zIndex: 1302 }}
+        keepMounted
       >
         {menuOptions.map((option, index) => (
           <MenuItem
@@ -261,10 +275,78 @@ const Header = () => {
     </React.Fragment>
   );
 
+  const drawer = (
+    <React.Fragment>
+      <SwipeableDrawer
+        disableBackdropTransition={!iOS}
+        disableDiscovery={iOS}
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        onOpen={() => setOpenDrawer(true)}
+        classes={{ paper: classes.drawer }}
+      >
+        <div className={classes.toolbarMargin}></div>
+        <List disablePadding>
+          {routes.map((route, index) => (
+            <ListItem
+              key={route.name}
+              component={Link}
+              to={route.link}
+              divider
+              button
+              classes={{ selected: classes.drawerItemSelected }}
+              onClick={() => {
+                setOpenDrawer(false);
+                setValue(index);
+              }}
+              selected={value === index}
+            >
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText disableTypography className={classes.drawerItem}>
+                {route.name}
+              </ListItemText>
+            </ListItem>
+          ))}
+          <ListItem
+            component={Link}
+            to='/estimate'
+            divider
+            button
+            classes={{
+              root: classes.drawerItemEstimate,
+              selected: classes.drawerItemSelected,
+            }}
+            onClick={() => {
+              setOpenDrawer(false);
+              setValue(5);
+            }}
+            selected={value === 5}
+          >
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText disableTypography className={classes.drawerItem}>
+              Free Estimate
+            </ListItemText>
+          </ListItem>
+        </List>
+      </SwipeableDrawer>
+      <IconButton
+        className={classes.drawerIconContainer}
+        onClick={() => setOpenDrawer(!openDrawer)}
+        disableRipple
+      >
+        <MenuIcon className={classes.drawerIcon} />
+      </IconButton>
+    </React.Fragment>
+  );
+
   return (
     <React.Fragment>
       <ElevationScroll>
-        <AppBar>
+        <AppBar className={classes.appbar}>
           <Toolbar disableGutters>
             <Button
               className={classes.logoContainer}
@@ -276,7 +358,7 @@ const Header = () => {
               <img src={logo} alt='company logo' className={classes.logo} />
             </Button>
 
-            {matches ? null : tabs}
+            {matches ? drawer : tabs}
           </Toolbar>
         </AppBar>
       </ElevationScroll>
