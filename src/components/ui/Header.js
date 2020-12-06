@@ -124,19 +124,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = () => {
+const Header = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
   const matches = useMediaQuery(theme.breakpoints.down('md'));
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [value, setValue] = useState(0);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    props.setValue(newValue);
   };
 
   const handleClick = (event) => {
@@ -148,7 +147,7 @@ const Header = () => {
   const handleMenuItemClick = (event, index) => {
     setAnchorEl(null);
     setOpenMenu(false);
-    setSelectedIndex(index);
+    props.setSelectedIndex(index);
   };
 
   const handleClose = () => {
@@ -201,10 +200,13 @@ const Header = () => {
     [...menuOptions, ...routes].forEach((route, index) => {
       switch (window.location.pathname) {
         case `${route.link}`:
-          if (value !== route.activeIndex) {
-            setValue(route.activeIndex);
-            if (route.selectedIndex && route.selectedIndex !== selectedIndex) {
-              setSelectedIndex(route.selectedIndex);
+          if (props.value !== route.activeIndex) {
+            props.setValue(route.activeIndex);
+            if (
+              route.selectedIndex &&
+              route.selectedIndex !== props.selectedIndex
+            ) {
+              props.setSelectedIndex(route.selectedIndex);
             }
           }
           break;
@@ -212,12 +214,12 @@ const Header = () => {
           break;
       }
     });
-  }, [value, selectedIndex]);
+  }, [props.value, props.selectedIndex, props]);
 
   const tabs = (
     <React.Fragment>
       <Tabs
-        value={value}
+        value={props.value}
         onChange={handleChange}
         className={classes.tabContainer}
         indicatorColor='primary'
@@ -260,13 +262,13 @@ const Header = () => {
             key={option.name}
             onClick={(event) => {
               handleClose();
-              setValue(1);
+              props.setValue(1);
               handleMenuItemClick(event, index);
             }}
             component={Link}
             to={option.link}
             classes={{ root: classes.menuItem }}
-            selected={index === selectedIndex && value === 1}
+            selected={index === props.selectedIndex && props.value === 1}
           >
             {option.name}
           </MenuItem>
@@ -297,9 +299,9 @@ const Header = () => {
               classes={{ selected: classes.drawerItemSelected }}
               onClick={() => {
                 setOpenDrawer(false);
-                setValue(index);
+                props.setValue(index);
               }}
-              selected={value === index}
+              selected={props.value === index}
             >
               <ListItemIcon>
                 <InboxIcon />
@@ -320,9 +322,9 @@ const Header = () => {
             }}
             onClick={() => {
               setOpenDrawer(false);
-              setValue(5);
+              props.setValue(5);
             }}
-            selected={value === 5}
+            selected={props.value === 5}
           >
             <ListItemIcon>
               <InboxIcon />
@@ -352,7 +354,7 @@ const Header = () => {
               className={classes.logoContainer}
               component={Link}
               to='/'
-              onClick={() => setValue(0)}
+              onClick={() => props.setValue(0)}
               disableRipple
             >
               <img src={logo} alt='company logo' className={classes.logo} />
