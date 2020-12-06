@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import theme from './ui/Theme';
 import Header from './ui/Header';
+import LandingPage from './Landing/LandingPage';
 import Footer from './ui/Footer';
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
           setSelectedIndex={setSelectedIndex}
         />
         <Switch>
-          <Route exact path='/' component={() => <div>Home</div>} />
+          <Route exact path='/' component={LandingPage} />
           <Route exact path='/services' component={() => <div>services</div>} />
           <Route
             exact
