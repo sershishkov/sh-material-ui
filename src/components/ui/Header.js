@@ -77,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '50px',
     marginLeft: '25px',
     height: '45px',
+    '&:hover': {
+      backgroundColor: theme.palette.secondary.light,
+    },
   },
   menu: {
     '&::-webkit-scrollbar': {
