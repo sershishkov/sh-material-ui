@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   servicesContainer: {
-    marginTop: '12em',
+    marginTop: '10em',
     [theme.breakpoints.down('sm')]: {
       padding: 25,
     },
@@ -54,16 +54,33 @@ const Services = (props) => {
       {/*-----iOS/Android Block-----*/}
       <Grid
         item
+        style={{
+          marginLeft: matchesSM ? 0 : '5em',
+          marginTop: matchesSM ? '1em' : '2em',
+        }}
+      >
+        <Typography
+          variant='h2'
+          gutterBottom
+          align={matchesSM ? 'center' : undefined}
+        >
+          Services
+        </Typography>
+      </Grid>
+      <Grid
+        item
         container
         direction='row'
         justify={matchesSM ? 'center' : 'flex-end'}
         className={classes.servicesContainer}
+        style={{ marginTop: matchesSM ? '1em' : '5em' }}
       >
         <Grid
           item
           style={{
             marginLeft: matchesSM ? 0 : '5em',
             textAlign: matchesSM ? 'center' : undefined,
+            width: matchesSM ? undefined : '35em',
           }}
         >
           <Typography variant='h4'>iOS/Android App Development</Typography>
@@ -102,6 +119,7 @@ const Services = (props) => {
             className={classes.icon}
             src={mobileAppsIcon}
             alt='Mobile phone Icon'
+            width='250em'
           />
         </Grid>
       </Grid>
@@ -118,6 +136,7 @@ const Services = (props) => {
           style={{
             marginLeft: matchesSM ? 0 : '5em',
             textAlign: matchesSM ? 'center' : undefined,
+            width: matchesSM ? undefined : '35em',
           }}
         >
           <Typography variant='h4'>Custom Software Development</Typography>
@@ -151,6 +170,7 @@ const Services = (props) => {
             className={classes.icon}
             src={customSoftwareIcon}
             alt='Software Icon'
+            width='250em'
           />
         </Grid>
       </Grid>
@@ -162,6 +182,7 @@ const Services = (props) => {
         direction='row'
         justify={matchesSM ? 'center' : 'flex-end'}
         className={classes.servicesContainer}
+        style={{ marginBottom: '10em' }}
       >
         <Grid
           item
@@ -196,7 +217,12 @@ const Services = (props) => {
           </Button>
         </Grid>
         <Grid item style={{ marginRight: matchesSM ? 0 : '5em' }}>
-          <img className={classes.icon} src={websiteIcon} alt='Website Icon' />
+          <img
+            className={classes.icon}
+            src={websiteIcon}
+            alt='Website Icon'
+            width='250em'
+          />
         </Grid>
       </Grid>
     </Grid>
