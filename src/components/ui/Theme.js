@@ -88,6 +88,10 @@ export default createMuiTheme({
       },
     },
     MuiInput: {
+      root: {
+        fontWeight: 300,
+        color: arcGrey,
+      },
       underline: {
         '&:before': {
           borderBottom: `2px solid ${arcBlue}`,
