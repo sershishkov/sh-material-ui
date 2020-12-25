@@ -177,7 +177,12 @@ const Contact = (props) => {
                   variant='body1'
                   style={{ color: theme.palette.common.blue, fontSize: '1rem' }}
                 >
-                  (555) 555-5555
+                  <a
+                    href='tel:5555555555'
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    (555) 555-5555
+                  </a>
                 </Typography>
               </Grid>
             </Grid>
@@ -194,7 +199,12 @@ const Contact = (props) => {
                   variant='body1'
                   style={{ color: theme.palette.common.blue, fontSize: '1rem' }}
                 >
-                  zachary@gmail.com
+                  <a
+                    href='mailto:zachary@gmail.com'
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    zachary@gmail.com
+                  </a>
                 </Typography>
               </Grid>
             </Grid>
@@ -255,7 +265,18 @@ const Contact = (props) => {
               />
             </Grid>
             <Grid item container justify='center' style={{ marginTop: '2em' }}>
-              <Button variant='contained' className={classes.sendButton}>
+              <Button
+                disabled={
+                  name.length === 0 ||
+                  message.length === 0 ||
+                  email.length === 0 ||
+                  phone.length === 0 ||
+                  phoneHelper.length !== 0 ||
+                  emailHelper.length !== 0
+                }
+                variant='contained'
+                className={classes.sendButton}
+              >
                 Send Message{' '}
                 <img
                   src={airplane}
