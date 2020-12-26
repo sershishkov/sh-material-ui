@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -106,6 +108,7 @@ const Contact = (props) => {
   // const [messageHelper, setMessageHelper] = useState('');
 
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onChange = (event) => {
     let valid;
@@ -138,6 +141,33 @@ const Contact = (props) => {
         break;
     }
   };
+  let myImg;
+
+  const onConfirm = async () => {
+    setLoading(true);
+    try {
+      const resUlt = await axios.get(
+        'https://media.giphy.com/media/mBecQhXXSsyYYLABlH/giphy.gif'
+      );
+      console.log(resUlt);
+      setLoading(false);
+      setOpen(false);
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+    }
+  };
+
+  const buttonContents = (
+    <React.Fragment>
+      Send Message{' '}
+      <img src={airplane} alt='paper airplane' style={{ marginLeft: '1em' }} />{' '}
+    </React.Fragment>
+  );
 
   return (
     <Grid container direction='row'>
@@ -288,12 +318,7 @@ const Contact = (props) => {
                 className={classes.sendButton}
                 onClick={() => setOpen(true)}
               >
-                Send Message{' '}
-                <img
-                  src={airplane}
-                  alt='paper airplane'
-                  style={{ marginLeft: '1em' }}
-                />{' '}
+                {buttonContents}
               </Button>
             </Grid>
           </Grid>
@@ -412,14 +437,9 @@ const Contact = (props) => {
                   }
                   variant='contained'
                   className={classes.sendButton}
-                  onClick={() => setOpen(false)}
+                  onClick={onConfirm}
                 >
-                  Send Message{' '}
-                  <img
-                    src={airplane}
-                    alt='paper airplane'
-                    style={{ marginLeft: '1em' }}
-                  />{' '}
+                  {loading ? <CircularProgress size={30} /> : buttonContents}
                 </Button>
               </Grid>
             </Grid>
