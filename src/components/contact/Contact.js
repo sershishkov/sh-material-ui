@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
 
 import background from '../../assets/background.jpg';
 import mobileBackground from '../../assets/mobileBackground.jpg';
@@ -77,6 +79,10 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: theme.palette.secondary.light,
     },
+    [theme.breakpoints.down('sm')]: {
+      height: 40,
+      width: 225,
+    },
   },
 }));
 
@@ -85,7 +91,7 @@ const Contact = (props) => {
   const theme = useTheme();
   const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
-  // const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
+  const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
 
   const [name, setName] = useState('');
   // const [nameHelper, setNameHelper] = useState('');
@@ -98,6 +104,8 @@ const Contact = (props) => {
 
   const [message, setMessage] = useState('');
   // const [messageHelper, setMessageHelper] = useState('');
+
+  const [open, setOpen] = useState(false);
 
   const onChange = (event) => {
     let valid;
@@ -208,6 +216,7 @@ const Contact = (props) => {
                 </Typography>
               </Grid>
             </Grid>
+
             <Grid
               item
               container
@@ -264,6 +273,7 @@ const Contact = (props) => {
                 }}
               />
             </Grid>
+
             <Grid item container justify='center' style={{ marginTop: '2em' }}>
               <Button
                 disabled={
@@ -276,6 +286,7 @@ const Contact = (props) => {
                 }
                 variant='contained'
                 className={classes.sendButton}
+                onClick={() => setOpen(true)}
               >
                 Send Message{' '}
                 <img
@@ -288,6 +299,134 @@ const Contact = (props) => {
           </Grid>
         </Grid>
       </Grid>
+
+      <Dialog
+        style={{ zIndex: 1302 }}
+        open={open}
+        fullScreen={matchesXS}
+        onClose={() => setOpen(false)}
+        PaperProps={{
+          style: {
+            paddingTop: matchesXS ? '1em' : '5em',
+            paddingLeft: matchesXS
+              ? 0
+              : matchesSM
+              ? '5em'
+              : matchesMD
+              ? '10em'
+              : '20em',
+            paddingRight: matchesXS
+              ? 0
+              : matchesSM
+              ? '5em'
+              : matchesMD
+              ? '10em'
+              : '20em',
+            paddingBottom: matchesXS ? '1em' : '5em',
+          },
+        }}
+      >
+        <DialogContent>
+          <Grid container direction='column'>
+            <Grid item>
+              <Typography align='center' variant='h4' gutterBottom>
+                Confirm message
+              </Typography>
+            </Grid>
+
+            <Grid item style={{ marginBottom: '0.5em' }}>
+              <TextField
+                label='Name'
+                // error
+                // helperText='Please enter a name'
+                id='name'
+                fullWidth
+                value={name}
+                onChange={(event) => {
+                  setName(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item style={{ marginBottom: '0.5em' }}>
+              <TextField
+                label='Email'
+                error={emailHelper.length !== 0}
+                helperText={emailHelper}
+                id='email'
+                fullWidth
+                value={email}
+                onChange={onChange}
+              />
+            </Grid>
+            <Grid item style={{ marginBottom: '0.5em' }}>
+              <TextField
+                label='Phone'
+                error={phoneHelper.length !== 0}
+                helperText={phoneHelper}
+                id='phone'
+                fullWidth
+                value={phone}
+                onChange={onChange}
+              />
+            </Grid>
+
+            <Grid item style={{ maxWidth: matchesXS ? '100%' : '20em' }}>
+              <TextField
+                InputProps={{ disableUnderline: true }}
+                className={classes.message}
+                id='message'
+                multiline
+                fullWidth
+                rows={10}
+                value={message}
+                onChange={(event) => {
+                  setMessage(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid
+              item
+              container
+              direction={matchesSM ? 'column' : 'row'}
+              style={{ marginTop: '2em' }}
+              alignItems='center'
+            >
+              <Grid item>
+                <Button
+                  color='primary'
+                  onClick={() => setOpen(false)}
+                  style={{ fontWeight: 300 }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  disabled={
+                    name.length === 0 ||
+                    message.length === 0 ||
+                    email.length === 0 ||
+                    phone.length === 0 ||
+                    phoneHelper.length !== 0 ||
+                    emailHelper.length !== 0
+                  }
+                  variant='contained'
+                  className={classes.sendButton}
+                  onClick={() => setOpen(false)}
+                >
+                  Send Message{' '}
+                  <img
+                    src={airplane}
+                    alt='paper airplane'
+                    style={{ marginLeft: '1em' }}
+                  />{' '}
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
+
       <Grid
         item
         container
