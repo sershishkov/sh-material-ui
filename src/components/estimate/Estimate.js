@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Lottie from 'react-lottie';
 import { cloneDeep } from 'lodash';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
-import check from '../../assets/check.svg';
-import send from '../../assets/send.svg';
+// import check from '../../assets/check.svg';
+// import send from '../../assets/send.svg';
 import software from '../../assets/software.svg';
 import mobile from '../../assets/mobile.svg';
 import website from '../../assets/website.svg';
@@ -31,7 +31,7 @@ import gps from '../../assets/gps.svg';
 import customized from '../../assets/customized.svg';
 import data from '../../assets/data.svg';
 import android from '../../assets/android.svg';
-import globe from '../../assets/globe.svg';
+// import globe from '../../assets/globe.svg';
 import biometrics from '../../assets/biometrics.svg';
 
 import estimateAnimation from '../../animations/estimateAnimation/data.json';
@@ -60,6 +60,7 @@ const defaultQuestions = [
   {
     id: 1,
     title: 'Which service are you interesting in??',
+    subtitle: null,
     active: true,
     options: [
       {
@@ -93,16 +94,13 @@ const defaultQuestions = [
   },
 ];
 
-const newQuestions = cloneDeep(defaultQuestions);
-newQuestions[0].options[0].selected = true;
-console.log(defaultQuestions[0].options[0]);
-
 const softwareQuestions = [
   { ...defaultQuestions[0], active: false },
   {
     id: 2,
     title: 'Which platforms do you need supported?',
     subtitle: 'Select all that apply.',
+    active: true,
     options: [
       {
         id: 1,
@@ -115,7 +113,7 @@ const softwareQuestions = [
       },
       {
         id: 2,
-        title: 'iOS Application',
+        title: 'iOS Appllication',
         subtitle: null,
         icon: iphone,
         iconAlt: 'outline of iphone',
@@ -132,7 +130,6 @@ const softwareQuestions = [
         cost: 100,
       },
     ],
-    active: true,
   },
   {
     id: 3,
@@ -276,44 +273,44 @@ const softwareQuestions = [
   },
 ];
 
-const websiteQuestions = [
-  { ...defaultQuestions[0], active: false },
-  {
-    id: 2,
-    title: 'Which type of website are you wanting?',
-    subtitle: 'Select one.',
-    options: [
-      {
-        id: 1,
-        title: 'Basic',
-        subtitle: '(Informational)',
-        icon: info,
-        iconAlt: 'person outline',
-        selected: false,
-        cost: 100,
-      },
-      {
-        id: 2,
-        title: 'Interactive',
-        subtitle: "(Users, API's, Messaging)",
-        icon: customized,
-        iconAlt: 'outline of two people',
-        selected: false,
-        cost: 200,
-      },
-      {
-        id: 3,
-        title: 'E-Commerce',
-        subtitle: '(Sales)',
-        icon: globe,
-        iconAlt: 'outline of three people',
-        selected: false,
-        cost: 250,
-      },
-    ],
-    active: true,
-  },
-];
+// const websiteQuestions = [
+//   { ...defaultQuestions[0], active: false },
+//   {
+//     id: 2,
+//     title: 'Which type of website are you wanting?',
+//     subtitle: 'Select one.',
+//     options: [
+//       {
+//         id: 1,
+//         title: 'Basic',
+//         subtitle: '(Informational)',
+//         icon: info,
+//         iconAlt: 'person outline',
+//         selected: false,
+//         cost: 100,
+//       },
+//       {
+//         id: 2,
+//         title: 'Interactive',
+//         subtitle: "(Users, API's, Messaging)",
+//         icon: customized,
+//         iconAlt: 'outline of two people',
+//         selected: false,
+//         cost: 200,
+//       },
+//       {
+//         id: 3,
+//         title: 'E-Commerce',
+//         subtitle: '(Sales)',
+//         icon: globe,
+//         iconAlt: 'outline of three people',
+//         selected: false,
+//         cost: 250,
+//       },
+//     ],
+//     active: true,
+//   },
+// ];
 
 const Estimate = (props) => {
   const classes = useStyles();
@@ -322,6 +319,8 @@ const Estimate = (props) => {
   // const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
   // const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
 
+  const [questions, setQuestions] = useState(softwareQuestions);
+
   const defaultOptions = {
     loop: true,
     autoplay: false,
@@ -329,6 +328,52 @@ const Estimate = (props) => {
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice',
     },
+  };
+
+  const nextQuestion = () => {
+    const newQuestions = cloneDeep(questions);
+    const activeIndex = newQuestions.findIndex((question) => question.active);
+    const nextIndex = activeIndex + 1;
+
+    newQuestions[activeIndex] = { ...newQuestions[activeIndex], active: false };
+    newQuestions[nextIndex] = { ...newQuestions[nextIndex], active: true };
+    console.log(nextIndex);
+
+    setQuestions(newQuestions);
+  };
+
+  const previousQuestion = () => {
+    const newQuestions = cloneDeep(questions);
+    const activeIndex = newQuestions.findIndex((question) => question.active);
+    const nextIndex = activeIndex - 1;
+
+    newQuestions[activeIndex] = { ...newQuestions[activeIndex], active: false };
+    newQuestions[nextIndex] = { ...newQuestions[nextIndex], active: true };
+    console.log(nextIndex);
+
+    setQuestions(newQuestions);
+  };
+
+  const navigationPreviousDisabled = () => {
+    const activeIndex = questions.findIndex((question) => question.active);
+
+    if (activeIndex === 0) {
+      console.log('true');
+      return true;
+    } else {
+      console.log('false');
+      return false;
+    }
+  };
+
+  const navigationNextDisabled = () => {
+    const activeIndex = questions.findIndex((question) => question.active);
+
+    if (activeIndex === questions.length - 1) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -353,7 +398,7 @@ const Estimate = (props) => {
         alignItems='center'
         style={{ marginRight: '2em', marginBottom: '25em' }}
       >
-        {defaultQuestions
+        {questions
           .filter((question) => question.active)
           .map((question, index) => (
             <React.Fragment key={index}>
@@ -381,30 +426,33 @@ const Estimate = (props) => {
                 </Typography>
               </Grid>
               <Grid item container>
-                {question.options.map((option) => (
-                  <Grid item container direction='column' md>
-                    <Grid item style={{ maxWidth: '12em' }}>
-                      <Typography
-                        variant='h6'
-                        align='center'
-                        style={{ marginBottom: '1em' }}
-                      >
-                        {option.title}
-                      </Typography>
-                      <Typography variant='caption' align='center'>
-                        {option.subtitle}
-                      </Typography>
-                    </Grid>
+                {question.options && console.log(question.options)}
 
-                    <Grid item>
-                      <img
-                        src={option.icon}
-                        alt={option.iconAlt}
-                        className={classes.icon}
-                      />
+                {question.options &&
+                  question.options.map((option) => (
+                    <Grid item container direction='column' md key={option.id}>
+                      <Grid item style={{ maxWidth: '12em' }}>
+                        <Typography
+                          variant='h6'
+                          align='center'
+                          style={{ marginBottom: '1em' }}
+                        >
+                          {option.title}
+                        </Typography>
+                        <Typography variant='caption' align='center'>
+                          {option.subtitle}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item>
+                        <img
+                          src={option.icon}
+                          alt={option.iconAlt}
+                          className={classes.icon}
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                ))}
+                  ))}
               </Grid>
             </React.Fragment>
           ))}
@@ -413,13 +461,33 @@ const Estimate = (props) => {
           item
           container
           justify='space-between'
-          style={{ width: '15em', marginTop: '3em' }}
+          style={{ width: '18em', marginTop: '3em' }}
         >
           <Grid item>
-            <img src={backArrow} alt='Previous question' />
+            <IconButton
+              disabled={navigationPreviousDisabled()}
+              onClick={previousQuestion}
+            >
+              <img
+                src={
+                  navigationPreviousDisabled() ? backArrowDisabled : backArrow
+                }
+                alt='Previous question'
+              />
+            </IconButton>
           </Grid>
           <Grid item>
-            <img src={forwardArrow} alt='Next question' />
+            <IconButton
+              disabled={navigationNextDisabled()}
+              onClick={nextQuestion}
+            >
+              <img
+                src={
+                  navigationNextDisabled() ? forwardArrowDisabled : forwardArrow
+                }
+                alt='Next question'
+              />
+            </IconButton>
           </Grid>
         </Grid>
         <Grid item>
