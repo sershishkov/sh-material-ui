@@ -319,7 +319,7 @@ const Estimate = (props) => {
   // const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
   // const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
 
-  const [questions, setQuestions] = useState(softwareQuestions);
+  const [questions, setQuestions] = useState(defaultQuestions);
 
   const defaultOptions = {
     loop: true,
@@ -380,8 +380,40 @@ const Estimate = (props) => {
     );
     const newSelected = newQuestions[activeIndex].options[newSelectedIndex];
 
-    newSelected.selected = !newSelected.selected;
-    setQuestions(newQuestions);
+    const previousIndexSelected = newQuestions[activeIndex].options.findIndex(
+      (option) => option.selected
+    );
+
+    switch (newQuestions[activeIndex].subtitle) {
+      case 'Select one.':
+        if (previousIndexSelected !== -1) {
+          newQuestions[activeIndex].options[
+            previousIndexSelected
+          ].selected = false;
+        } else {
+          newSelected.selected = !newSelected.selected;
+        }
+
+        break;
+      default:
+        newSelected.selected = !newSelected.selected;
+        break;
+    }
+
+    switch (newSelected.title) {
+      case 'Custom Software Development':
+        setQuestions(softwareQuestions);
+        break;
+      case 'iOS/Android App Development':
+        setQuestions(softwareQuestions);
+        break;
+      case 'Website Development':
+        setQuestions(websiteQuestions);
+        break;
+      default:
+        setQuestions(newQuestions);
+        break;
+    }
   };
 
   return (
