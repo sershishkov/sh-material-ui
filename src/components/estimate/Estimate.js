@@ -3,14 +3,14 @@ import Lottie from 'react-lottie';
 import { cloneDeep } from 'lodash';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-// import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
-// import check from '../../assets/check.svg';
-// import send from '../../assets/send.svg';
+import check from '../../assets/check.svg';
+import send from '../../assets/send.svg';
 import software from '../../assets/software.svg';
 import mobile from '../../assets/mobile.svg';
 import website from '../../assets/website.svg';
@@ -31,7 +31,7 @@ import gps from '../../assets/gps.svg';
 import customized from '../../assets/customized.svg';
 import data from '../../assets/data.svg';
 import android from '../../assets/android.svg';
-// import globe from '../../assets/globe.svg';
+import globe from '../../assets/globe.svg';
 import biometrics from '../../assets/biometrics.svg';
 
 import estimateAnimation from '../../animations/estimateAnimation/data.json';
@@ -273,49 +273,49 @@ const softwareQuestions = [
   },
 ];
 
-// const websiteQuestions = [
-//   { ...defaultQuestions[0], active: false },
-//   {
-//     id: 2,
-//     title: 'Which type of website are you wanting?',
-//     subtitle: 'Select one.',
-//     options: [
-//       {
-//         id: 1,
-//         title: 'Basic',
-//         subtitle: '(Informational)',
-//         icon: info,
-//         iconAlt: 'person outline',
-//         selected: false,
-//         cost: 100,
-//       },
-//       {
-//         id: 2,
-//         title: 'Interactive',
-//         subtitle: "(Users, API's, Messaging)",
-//         icon: customized,
-//         iconAlt: 'outline of two people',
-//         selected: false,
-//         cost: 200,
-//       },
-//       {
-//         id: 3,
-//         title: 'E-Commerce',
-//         subtitle: '(Sales)',
-//         icon: globe,
-//         iconAlt: 'outline of three people',
-//         selected: false,
-//         cost: 250,
-//       },
-//     ],
-//     active: true,
-//   },
-// ];
+const websiteQuestions = [
+  { ...defaultQuestions[0], active: false },
+  {
+    id: 2,
+    title: 'Which type of website are you wanting?',
+    subtitle: 'Select one.',
+    options: [
+      {
+        id: 1,
+        title: 'Basic',
+        subtitle: '(Informational)',
+        icon: info,
+        iconAlt: 'person outline',
+        selected: false,
+        cost: 100,
+      },
+      {
+        id: 2,
+        title: 'Interactive',
+        subtitle: "(Users, API's, Messaging)",
+        icon: customized,
+        iconAlt: 'outline of two people',
+        selected: false,
+        cost: 200,
+      },
+      {
+        id: 3,
+        title: 'E-Commerce',
+        subtitle: '(Sales)',
+        icon: globe,
+        iconAlt: 'outline of three people',
+        selected: false,
+        cost: 250,
+      },
+    ],
+    active: true,
+  },
+];
 
 const Estimate = (props) => {
   const classes = useStyles();
-  // const theme = useTheme();
-  // const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
+  const theme = useTheme();
+  const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
   // const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
   // const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
 
