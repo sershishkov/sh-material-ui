@@ -337,7 +337,6 @@ const Estimate = (props) => {
 
     newQuestions[activeIndex] = { ...newQuestions[activeIndex], active: false };
     newQuestions[nextIndex] = { ...newQuestions[nextIndex], active: true };
-    console.log(nextIndex);
 
     setQuestions(newQuestions);
   };
@@ -349,7 +348,6 @@ const Estimate = (props) => {
 
     newQuestions[activeIndex] = { ...newQuestions[activeIndex], active: false };
     newQuestions[nextIndex] = { ...newQuestions[nextIndex], active: true };
-    console.log(nextIndex);
 
     setQuestions(newQuestions);
   };
@@ -358,10 +356,8 @@ const Estimate = (props) => {
     const activeIndex = questions.findIndex((question) => question.active);
 
     if (activeIndex === 0) {
-      console.log('true');
       return true;
     } else {
-      console.log('false');
       return false;
     }
   };
@@ -374,6 +370,18 @@ const Estimate = (props) => {
     } else {
       return false;
     }
+  };
+
+  const handleSelect = (id) => {
+    const newQuestions = cloneDeep(questions);
+    const activeIndex = newQuestions.findIndex((question) => question.active);
+    const newSelectedIndex = newQuestions[activeIndex].options.findIndex(
+      (option) => option.id.toString() === id.toString()
+    );
+    const newSelected = newQuestions[activeIndex].options[newSelectedIndex];
+
+    newSelected.selected = !newSelected.selected;
+    setQuestions(newQuestions);
   };
 
   return (
@@ -410,6 +418,7 @@ const Estimate = (props) => {
                     fontWeight: 500,
                     fontSize: '2.25rem',
                     marginTop: '5em',
+                    lineHeight: 1.25,
                   }}
                 >
                   {question.title}
@@ -426,12 +435,26 @@ const Estimate = (props) => {
                 </Typography>
               </Grid>
               <Grid item container>
-                {question.options && console.log(question.options)}
-
                 {question.options &&
                   question.options.map((option) => (
-                    <Grid item container direction='column' md key={option.id}>
-                      <Grid item style={{ maxWidth: '12em' }}>
+                    <Grid
+                      item
+                      container
+                      direction='column'
+                      md
+                      key={option.id}
+                      component={Button}
+                      onClick={() => handleSelect(option.id)}
+                      style={{
+                        display: 'grid',
+                        textTransform: 'none',
+                        borderRadius: 0,
+                        backgroundColor: option.selected
+                          ? theme.palette.common.orange
+                          : null,
+                      }}
+                    >
+                      <Grid item style={{ maxWidth: '14em' }}>
                         <Typography
                           variant='h6'
                           align='center'
