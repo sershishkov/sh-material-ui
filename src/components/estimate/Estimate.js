@@ -62,6 +62,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '5em',
     borderRadius: 5,
   },
+  specialText: {
+    fontFamily: 'Raleway',
+    fontWeight: 700,
+    fontSize: '1.5rem',
+    color: theme.palette.common.orange,
+  },
 }));
 
 const defaultQuestions = [
@@ -341,6 +347,7 @@ const Estimate = (props) => {
 
   const [message, setMessage] = useState('');
   // const [messageHelper, setMessageHelper] = useState('');
+  const [total, setTotal] = useState(0);
 
   const defaultOptions = {
     loop: true,
@@ -435,6 +442,37 @@ const Estimate = (props) => {
         setQuestions(newQuestions);
         break;
     }
+  };
+
+  const getTotal = () => {
+    let cost = 0;
+    let multipier = 0;
+    const selection = questions
+      .map((question) => question.options.filter((option) => option.selected))
+      .filter((question) => question.length > 0);
+
+    selection.map((options) => options.map((option) => (cost += option.cost)));
+
+    if (questions.length > 2) {
+      const userCost = questions
+        .filter(
+          (question) => question.title === 'How many users do you expect?'
+        )
+        .map((question) =>
+          question.options.filter((option) => option.selected)
+        );
+      if (userCost) {
+        multipier = userCost[0][0].cost;
+        cost -= multipier;
+        cost *= multipier;
+      }
+      // console.log('userCost', userCost);
+      // console.log('multipier', multipier);
+      // console.log('cost', cost);
+    }
+
+    setTotal(cost);
+    // console.log(cost);
   };
 
   const onChange = (event) => {
@@ -602,7 +640,10 @@ const Estimate = (props) => {
           <Button
             variant='contained'
             className={classes.estimateButton}
-            onClick={() => setOpenDialog(true)}
+            onClick={() => {
+              setOpenDialog(true);
+              getTotal();
+            }}
           >
             Get Estimate
           </Button>
@@ -675,7 +716,8 @@ const Estimate = (props) => {
             </Grid>
             <Grid item>
               <Typography variant='body1' paragraph>
-                We can create this digital solution for an estimated
+                We can create this digital solution for an estimated{' '}
+                <span className={classes.specialText}>${total.toFixed(2)}</span>
               </Typography>
               <Typography variant='body1' paragraph>
                 Fill out your name,phone number,and email, please request? and
