@@ -482,6 +482,7 @@ const Estimate = (props) => {
     // console.log('cost', cost);
 
     setTotal(cost);
+    setUsers(userCost[0][0].title);
     // console.log(cost);
   };
 
@@ -555,6 +556,21 @@ const Estimate = (props) => {
     setFeatures(newFeatures);
 
     // console.log(newFeatures);
+  };
+  const getCustomFeatures = () => {
+    if (questions.length > 2) {
+      const newCustomFeatures = questions
+        .filter(
+          (question) =>
+            question.title ===
+            'What type of custom features do you expect to need?'
+        )
+        .map((question) =>
+          question.options.filter((option) => option.selected)
+        )[0][0].title;
+
+      setCustomFeatures(newCustomFeatures);
+    }
   };
 
   return (
@@ -695,6 +711,7 @@ const Estimate = (props) => {
               getTotal();
               getPlatforms();
               getFeatures();
+              getCustomFeatures();
             }}
           >
             Get Estimate
@@ -863,7 +880,9 @@ const Estimate = (props) => {
                     </Grid>
                     <Grid item>
                       <Typography variant='body1'>
-                        Third options check
+                        The custom features will be of{' '}
+                        {customFeatures.toLowerCase()}
+                        {`, and the project will be used by about ${users} users`}
                       </Typography>
                     </Grid>
                   </Grid>
