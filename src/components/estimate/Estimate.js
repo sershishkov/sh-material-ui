@@ -485,26 +485,6 @@ const Estimate = (props) => {
     // console.log(cost);
   };
 
-  const getPlatforms = () => {
-    let newPlatforms = [];
-    const wichPlatform = questions.filter(
-      (question) => question.title === 'Which platforms do you need supported?'
-    );
-    // console.log(wichPlatform);
-
-    if (wichPlatform.length > 0) {
-      wichPlatform.map((question) =>
-        question.options
-          .filter((option) => option.selected)
-          .map((option) => newPlatforms.push(option.title))
-      );
-    }
-
-    setPlatforms(newPlatforms);
-
-    console.log(newPlatforms);
-  };
-
   const onChange = (event) => {
     let valid;
 
@@ -535,6 +515,46 @@ const Estimate = (props) => {
       default:
         break;
     }
+  };
+
+  const getPlatforms = () => {
+    let newPlatforms = [];
+    const wichPlatform = questions.filter(
+      (question) => question.title === 'Which platforms do you need supported?'
+    );
+    // console.log(wichPlatform);
+
+    if (wichPlatform.length > 0) {
+      wichPlatform.map((question) =>
+        question.options
+          .filter((option) => option.selected)
+          .map((option) => newPlatforms.push(option.title))
+      );
+    }
+
+    setPlatforms(newPlatforms);
+
+    // console.log(newPlatforms);
+  };
+
+  const getFeatures = () => {
+    let newFeatures = [];
+
+    if (questions.length > 2) {
+      questions
+        .filter(
+          (question) =>
+            question.title === 'Which features do you expect to use?'
+        )
+        .map((question) => question.options.filter((option) => option.selected))
+        .map((option) =>
+          option.map((newFeature) => newFeatures.push(newFeature.title))
+        );
+    }
+
+    setFeatures(newFeatures);
+
+    // console.log(newFeatures);
   };
 
   return (
@@ -674,6 +694,7 @@ const Estimate = (props) => {
               setOpenDialog(true);
               getTotal();
               getPlatforms();
+              getFeatures();
             }}
           >
             Get Estimate
@@ -804,7 +825,35 @@ const Estimate = (props) => {
                     </Grid>
                     <Grid item>
                       <Typography variant='body1'>
-                        Second options check
+                        {'with '}
+                        {/* if we have features... */}
+                        {features.length > 0
+                          ? //...and there's only 1...
+                            features.length === 1
+                            ? //then end the sentence here
+                              `${features[0]}.`
+                            : //otherwise, if there are two features...
+                            features.length === 2
+                            ? //...then end the sentence here
+                              `${features[0]} and ${features[1]}.`
+                            : //otherwise, if there are three or more features...
+                              features
+                                //filter out the very last feature...
+                                .filter(
+                                  (feature, index) =>
+                                    index !== features.length - 1
+                                )
+                                //and for those features return their name...
+                                .map((feature, index) => (
+                                  <span key={index}>{`${feature}, `}</span>
+                                ))
+                          : null}
+                        {features.length > 0 &&
+                        features.length !== 1 &&
+                        features.length !== 2
+                          ? //...and then finally add the last feature with 'and' in front of it
+                            ` and ${features[features.length - 1]}.`
+                          : null}
                       </Typography>
                     </Grid>
                   </Grid>
