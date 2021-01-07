@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -12,6 +11,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Snackbar from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import background from '../../assets/background.jpg';
 import mobileBackground from '../../assets/mobileBackground.jpg';
@@ -320,6 +320,7 @@ const Contact = (props) => {
                 className={classes.message}
                 id='message'
                 multiline
+                placeholder='Tell us more about your project'
                 fullWidth
                 rows={10}
                 value={message}

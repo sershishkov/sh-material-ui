@@ -13,6 +13,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 import Hidden from '@material-ui/core/Hidden';
+import Snackbar from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import check from '../../assets/check.svg';
 import send from '../../assets/send.svg';
@@ -359,6 +361,13 @@ const Estimate = (props) => {
   const [category, setCategory] = useState('');
   const [users, setUsers] = useState('');
 
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+    backgroundColor: '',
+  });
+
   const defaultOptions = {
     loop: true,
     autoplay: false,
@@ -606,6 +615,7 @@ const Estimate = (props) => {
   };
 
   const sendEstimate = async () => {
+    setLoading(true);
     try {
       const resUlt = await axios.get(
         'https://media.giphy.com/media/mBecQhXXSsyYYLABlH/giphy.gif',
@@ -623,27 +633,55 @@ const Estimate = (props) => {
           },
         }
       );
+
       console.log(resUlt);
-      // setLoading(false);
+      setLoading(false);
       // setOpen(false);
       // setName('');
       // setEmail('');
       // setPhone('');
       // setMessage('');
-      // setAlert({
-      //   open: true,
-      //   message: 'Message sent successfully',
-      //   backgroundColor: '#4bb543',
-      // });
+      setAlert({
+        open: true,
+        message: 'Estimate placed successfully',
+        backgroundColor: '#4bb543',
+      });
+      setOpenDialog(false);
     } catch (error) {
-      // setLoading(false);
-      // console.error(error);
-      // setAlert({
-      //   open: true,
-      //   message: 'Something went wrong, please try again',
-      //   backgroundColor: '#ff3232',
-      // });
+      setLoading(false);
+      console.error(error);
+      setAlert({
+        open: true,
+        message: 'Something went wrong, please try again',
+        backgroundColor: '#ff3232',
+      });
     }
+  };
+
+  const estimateDisabled = () => {
+    let disabled = true;
+    const emptySelections = questions
+      .map((question) => question.options.filter((option) => option.selected))
+      .filter((question) => question.length === 0);
+
+    if (questions.length === 2) {
+      if (emptySelections.length === 1) {
+        disabled = false;
+      }
+    } else if (questions.length === 1) {
+      disabled = true;
+    } else if (
+      emptySelections.length < 3 &&
+      questions[questions.length - 1].options.filter(
+        (option) => option.selected
+      ).length > 0
+    ) {
+      disabled = false;
+    }
+
+    return disabled;
+
+    // console.log(emptySelections);
   };
 
   const softwareSelection = (
@@ -918,6 +956,7 @@ const Estimate = (props) => {
           <Button
             variant='contained'
             className={classes.estimateButton}
+            disabled={estimateDisabled()}
             onClick={() => {
               setOpenDialog(true);
               getTotal();
@@ -1000,6 +1039,7 @@ const Estimate = (props) => {
                   InputProps={{ disableUnderline: true }}
                   className={classes.message}
                   id='message'
+                  placeholder='Tell us more about your project'
                   multiline
                   fullWidth
                   rows={10}
@@ -1014,6 +1054,7 @@ const Estimate = (props) => {
                   variant='body1'
                   paragraph
                   align={matchesSM ? 'center' : undefined}
+                  style={{ lineHeight: 1.25 }}
                 >
                   We can create this digital solution for an estimated{' '}
                   <span className={classes.specialText}>
@@ -1050,13 +1091,27 @@ const Estimate = (props) => {
                   variant='contained'
                   className={classes.estimateButton}
                   onClick={() => sendEstimate()}
+                  disabled={
+                    name.length === 0 ||
+                    message.length === 0 ||
+                    email.length === 0 ||
+                    phone.length === 0 ||
+                    phoneHelper.length !== 0 ||
+                    emailHelper.length !== 0
+                  }
                 >
-                  Place Request
-                  <img
-                    src={send}
-                    alt='paper airplane'
-                    style={{ marginLeft: '0.5em' }}
-                  />
+                  {loading ? (
+                    <CircularProgress />
+                  ) : (
+                    <React.Fragment>
+                      Place Request
+                      <img
+                        src={send}
+                        alt='paper airplane'
+                        style={{ marginLeft: '0.5em' }}
+                      />
+                    </React.Fragment>
+                  )}
                 </Button>
               </Grid>
               <Hidden mdUp>
@@ -1074,6 +1129,14 @@ const Estimate = (props) => {
           </Grid>
         </DialogContent>
       </Dialog>
+      <Snackbar
+        open={alert.open}
+        message={alert.message}
+        ContentProps={{ style: { backgroundColor: alert.backgroundColor } }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={() => setAlert({ ...alert, open: false })}
+        autoHideDuration={5000}
+      ></Snackbar>
     </Grid>
   );
 };
