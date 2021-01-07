@@ -151,6 +151,7 @@ const Contact = (props) => {
 
   const onConfirm = async () => {
     setLoading(true);
+
     try {
       const resUlt = await axios.get(
         'https://media.giphy.com/media/mBecQhXXSsyYYLABlH/giphy.gif',

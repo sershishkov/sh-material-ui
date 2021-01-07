@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Lottie from 'react-lottie';
 import { cloneDeep } from 'lodash';
+import axios from 'axios';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -333,7 +334,7 @@ const Estimate = (props) => {
   const theme = useTheme();
   const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
-  const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
+  // const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
 
   const [questions, setQuestions] = useState(defaultQuestions);
   const [openDialog, setOpenDialog] = useState(false);
@@ -601,6 +602,47 @@ const Estimate = (props) => {
         .options.filter((option) => option.selected)[0].title;
       setCategory(newCategory);
       // console.log(newCategory);
+    }
+  };
+
+  const sendEstimate = async () => {
+    try {
+      const resUlt = await axios.get(
+        'https://media.giphy.com/media/mBecQhXXSsyYYLABlH/giphy.gif',
+        {
+          params: {
+            name: name,
+            email: email,
+            phone: phone,
+            message: message,
+            service: service,
+            platforms: platforms,
+            features: features,
+            customFeatures: customFeatures,
+            users: users,
+          },
+        }
+      );
+      console.log(resUlt);
+      // setLoading(false);
+      // setOpen(false);
+      // setName('');
+      // setEmail('');
+      // setPhone('');
+      // setMessage('');
+      // setAlert({
+      //   open: true,
+      //   message: 'Message sent successfully',
+      //   backgroundColor: '#4bb543',
+      // });
+    } catch (error) {
+      // setLoading(false);
+      // console.error(error);
+      // setAlert({
+      //   open: true,
+      //   message: 'Something went wrong, please try again',
+      //   backgroundColor: '#ff3232',
+      // });
     }
   };
 
@@ -1004,7 +1046,11 @@ const Estimate = (props) => {
               </Hidden>
 
               <Grid item>
-                <Button variant='contained' className={classes.estimateButton}>
+                <Button
+                  variant='contained'
+                  className={classes.estimateButton}
+                  onClick={() => sendEstimate()}
+                >
                   Place Request
                   <img
                     src={send}
